@@ -48,7 +48,7 @@ func TestGetEntry(t *testing.T) {
 
 func TestListEntries(t *testing.T) {
 	account := createRandomAccount(t)
-	for i := 0; i < 10; i++ {
+	for range 10 {
 		createRandomEntry(t, account)
 	}
 
