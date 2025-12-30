@@ -6,6 +6,7 @@ import (
 
 	"github.com/chuuch/go-banking/api"
 	db "github.com/chuuch/go-banking/db/sqlc"
+	_ "github.com/lib/pq"
 )
 
 const (
