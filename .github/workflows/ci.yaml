@@ -19,6 +19,7 @@ jobs:
           POSTGRES_USER: root
           POSTGRES_PASSWORD: secret
           POSTGRES_DB: simple_bank
+          DB_URL: postgres://root:secret@localhost:5432/simple_bank?sslmode=disable
         ports:
           - 5432:5432
         options: >-
