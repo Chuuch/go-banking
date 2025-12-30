@@ -8,10 +8,11 @@ dropdb:
 	docker exec -it postgres12 dropdb simple_bank
 
 migrateup:
-	migrate -path db/migration -database "$$DB_URL" -verbose up
+	migrate -path db/migration -database "$(DB_URL)" -verbose up
 
-migratedown:
-	migrate -path db/migration -database "$$DB_URL" -verbose down
+migrateup:
+	@test -n "$(DB_URL)" || (echo "DB_URL is not set" && exit 1)
+	migrate -path db/migration -database "$(DB_URL)" -verbose up
 
 sqlc:
 	sqlc generate
