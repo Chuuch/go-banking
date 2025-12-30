@@ -11,8 +11,7 @@ migrateup:
 	migrate -path db/migration -database "$(DB_URL)" -verbose up
 
 migrateup:
-	@test -n "$(DB_URL)" || (echo "DB_URL is not set" && exit 1)
-	migrate -path db/migration -database "$(DB_URL)" -verbose up
+	migrate -path db/migration -database "postgres://root:secret@localhost:5432/simple_bank?sslmode=disable" -verbose up
 
 sqlc:
 	sqlc generate
