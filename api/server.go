@@ -26,6 +26,9 @@ func NewServer(store db.Store) *Server {
 	// List accounts (paginated)
 	router.GET("/accounts", server.listAccount)
 
+	// Create transfer
+	router.POST("/transfers", server.createTransfer)
+
 	server.router = router
 	return server
 }
