@@ -22,6 +22,7 @@ func (server *Server) createTransfer(ctx *gin.Context) {
 	var req transferRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
 	}
 
 	fromAccount, valid := server.validAccount(ctx, req.FromAccountID, req.Currency)
