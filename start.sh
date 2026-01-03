@@ -7,6 +7,7 @@ if [ -f "/app/app.env" ]; then
     . /app/app.env
 fi
 
+# Run migrations with our DB_SOURCE flag
 echo "run db migration"
 /app/migrate -path /app/migration -database "$DB_SOURCE" -verbose up
 
