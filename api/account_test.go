@@ -131,7 +131,7 @@ func TestListAccountsAPI(t *testing.T) {
 
 	n := 5
 	accounts := make([]db.Account, n)
-	for i := 0; i < n; i++ {
+	for i := range n {
 		accounts[i] = randomAccount(user.Username)
 	}
 
