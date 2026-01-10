@@ -1,7 +1,6 @@
 package gapi
 
 import (
-	"context"
 	"fmt"
 
 	db "github.com/chuuch/go-banking/db/sqlc"
@@ -29,18 +28,4 @@ func NewServer(config util.Config, store db.Store) (*Server, error) {
 		tokenMaker: tokenMaker,
 	}
 	return server, nil
-}
-
-func (s *Server) CreateUser(
-	ctx context.Context,
-	req *pb.CreateUserRequest,
-) (*pb.CreateUserResponse, error) {
-	return &pb.CreateUserResponse{}, nil
-}
-
-func (s *Server) LoginUser(
-	ctx context.Context,
-	req *pb.LoginUserRequest,
-) (*pb.LoginUserResponse, error) {
-	return &pb.LoginUserResponse{}, nil
 }
