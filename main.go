@@ -9,11 +9,13 @@ import (
 
 	"github.com/chuuch/go-banking/api"
 	db "github.com/chuuch/go-banking/db/sqlc"
+	_ "github.com/chuuch/go-banking/doc/statik"
 	"github.com/chuuch/go-banking/gapi"
 	"github.com/chuuch/go-banking/pb"
 	"github.com/chuuch/go-banking/util"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	_ "github.com/lib/pq"
+	"github.com/rakyll/statik/fs"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 	"google.golang.org/protobuf/encoding/protojson"
@@ -38,7 +40,7 @@ func main() {
 func runGRPCServer(config util.Config, store db.Store) {
 	server, err := gapi.NewServer(config, store)
 	if err != nil {
-		log.Fatal("cannot create server", err)
+		log.Fatal("cannot create server:", err)
 	}
 
 	grpcServer := grpc.NewServer()
@@ -47,13 +49,13 @@ func runGRPCServer(config util.Config, store db.Store) {
 
 	listener, err := net.Listen("tcp", config.GRPCServerAddress)
 	if err != nil {
-		log.Fatal("cannot create listener", err)
+		log.Fatal("cannot create listener:", err)
 	}
 
 	log.Printf("start gRPC server at %s", listener.Addr().String())
 	err = grpcServer.Serve(listener)
 	if err != nil {
-		log.Fatal("cannot start gRPC server", err)
+		log.Fatal("cannot start gRPC server:", err)
 	}
 }
 
@@ -78,21 +80,29 @@ func runGatewayServer(config util.Config, store db.Store) {
 
 	err = pb.RegisterSimpleBankHandlerServer(ctx, grpcMux, server)
 	if err != nil {
-		log.Fatal("cannot register handler server", err)
+		log.Fatal("cannot register handler server:", err)
 	}
 
 	mux := http.NewServeMux()
 	mux.Handle("/", grpcMux)
 
+	statikFS, err := fs.New()
+	if err != nil {
+		log.Fatal("cannot create statik fs:", err)
+	}
+
+	swaggerHandler := http.StripPrefix("/swagger/", http.FileServer(statikFS))
+	mux.Handle("/swagger/", swaggerHandler)
+
 	listener, err := net.Listen("tcp", config.HTTPServerAddress)
 	if err != nil {
-		log.Fatal("cannot create listener", err)
+		log.Fatal("cannot create listener:", err)
 	}
 
 	log.Printf("start HTTP gateway server at %s", listener.Addr().String())
 	err = http.Serve(listener, mux)
 	if err != nil {
-		log.Fatal("cannot start HTTP gateway server", err)
+		log.Fatal("cannot start HTTP gateway server:", err)
 	}
 }
 
