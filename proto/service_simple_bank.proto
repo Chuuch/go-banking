@@ -5,6 +5,7 @@ package pb;
 import "google/api/annotations.proto";
 import "rpc_create_user.proto";
 import "rpc_login_user.proto";
+import "rpc_update_user.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
 option go_package = "github.com/chuuch/go-banking/pb";
@@ -34,6 +35,19 @@ service SimpleBank {
       summary    : "Create a new user";
     };
   }
+
+  // Update user rpc
+  rpc UpdateUser (UpdateUserRequest) returns (UpdateUserResponse) {
+    option (google.api.http) = {
+      patch: "/v1/update_user"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to update a user";
+      summary    : "Update a new user";
+    };
+  }
+    // Login user rpc
     // Login user rpc
   rpc LoginUser (LoginUserRequest) returns (LoginUserResponse) {
     option (google.api.http) = {
