@@ -88,6 +88,40 @@
           "SimpleBank"
         ]
       }
+    },
+    "/v1/update_user": {
+      "patch": {
+        "summary": "Update a new user",
+        "description": "Use this API to update a user",
+        "operationId": "SimpleBank_UpdateUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbUpdateUserResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbUpdateUserRequest"
+            }
+          }
+        ],
+        "tags": [
+          "SimpleBank"
+        ]
+      }
     }
   },
   "definitions": {
@@ -155,6 +189,33 @@
         }
       },
       "title": "Login user response for the RPC"
+    },
+    "pbUpdateUserRequest": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "fullName": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "title": "Create user request for the RPC"
+    },
+    "pbUpdateUserResponse": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "$ref": "#/definitions/pbUser"
+        }
+      },
+      "title": "Create user response for the RPC"
     },
     "pbUser": {
       "type": "object",
