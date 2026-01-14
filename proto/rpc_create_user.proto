@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package pb;
+
+import "user.proto";
+
+option go_package = "github.com/chuuch/go-banking/pb";
+
+
+// Create user request for the RPC
+message CreateUserRequest {
+  string username = 1;
+  string full_name = 2;
+  string email = 3;
+  string password = 4;
+}
+
+
+// Create user response for the RPC
+message CreateUserResponse {
+    User user = 1;
+}
