@@ -1,7 +1,7 @@
 package api
 
 import (
-	"database/sql"
+	"errors"
 	"net/http"
 	"time"
 
@@ -9,7 +9,6 @@ import (
 	"github.com/chuuch/go-banking/util"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"github.com/lib/pq"
 )
 
 type createUserRequest struct {
@@ -62,12 +61,9 @@ func (server *Server) createUser(ctx *gin.Context) {
 	if err != nil {
 
 		// We try to convert the err to a Postgres error to improve error feedback and UX
-		if pqErr, ok := err.(*pq.Error); ok {
-			switch pqErr.Code.Name() {
-			case "unique_violation":
-				ctx.JSON(http.StatusForbidden, errorResponse(err))
-				return
-			}
+		if db.ErrorCode(err) == db.UniqueViolation {
+			ctx.JSON(http.StatusForbidden, errorResponse(err))
+			return
 		}
 
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
@@ -104,7 +100,7 @@ func (server *Server) loginUser(ctx *gin.Context) {
 	user, err := server.store.GetUser(ctx, req.Username)
 	if err != nil {
 		// If there is no user found we return an SQL error no rows
-		if err == sql.ErrNoRows {
+		if errors.Is(err, db.ErrRecordNotFound) {
 			ctx.JSON(http.StatusNotFound, errorResponse(err))
 			return
 		}
