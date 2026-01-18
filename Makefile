@@ -9,6 +9,9 @@ createdb:
 dropdb:
 	docker exec -it postgres16 dropdb simple_bank
 
+new_migration:
+	migrate create -ext sql -dir db/migration -seq $(name)
+
 migrateup:
 	migrate -path db/migration -database "$(DB_URL)" -verbose up
 
@@ -23,6 +26,9 @@ migratedown1:
 
 sqlc:
 	sqlc generate
+
+db_schema:
+	dbml2sql --postgres -o doc/schema.sql doc/db.dbml
 
 test:
 	go test -v -cover ./...
@@ -46,4 +52,4 @@ proto:
 redis:
 	docker run --name redis -p 6379:6379 -d redis:7-alpine
 
-.PHONY: postgres createdb dropdb migrateup migrateup1 migratedown1 migratedown sqlc test server mock proto redis
+.PHONY: postgres createdb dropdb new_migration migrateup migrateup1 migratedown1 migratedown sqlc db_schema test server mock proto redis

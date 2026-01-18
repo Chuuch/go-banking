@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = "github.com/chuuch/go-banking/pb";
+
+
+// Create user request for the RPC
+message VerifyEmailRequest {
+  int64 email_id = 1;
+  string secret_code = 2;
+}
+
+
+// Create user response for the RPC
+message VerifyEmailResponse {
+    bool is_verified = 1;
+}
