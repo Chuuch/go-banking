@@ -6,7 +6,9 @@ import (
 	"strings"
 
 	"github.com/chuuch/go-banking/token"
+	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
+	"google.golang.org/grpc/status"
 )
 
 const (
@@ -36,7 +38,7 @@ func (server *Server) authorizeUser(ctx context.Context) (*token.Payload, error)
 	payload, err := server.tokenMaker.VerifyToken(accessToken)
 
 	if err != nil {
-		return nil, fmt.Errorf("invalid access token: %s", err)
+		return nil, status.Errorf(codes.Unauthenticated, "invalid access token: %s", err)
 	}
 	return payload, nil
 }
