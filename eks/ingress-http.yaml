@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: go-banking-api-ingress-http
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: "api.golang-banking.xyz"
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: go-banking-api-service
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - api.golang-banking.xyz
+      secretName: golang-banking-api-cert

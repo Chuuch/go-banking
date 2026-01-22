@@ -1,20 +1,15 @@
 apiVersion: networking.k8s.io/v1
-kind: IngressClass
-metadata:
-  name: nginx
-spec:
-  controller: k8s.io/ingress-nginx
----
-apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: go-banking-api-ingress
+  name: go-banking-api-ingress-grpc
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    ngingx.ingress.kubernetes.io/backend-protocol: "GRPC"
 spec:
   ingressClassName: nginx
   rules:
-    - host: "api.golang-banking.xyz"
+    - host: "gapi.golang-banking.xyz"
       http:
         paths:
           - pathType: Prefix
@@ -23,8 +18,8 @@ spec:
               service:
                 name: go-banking-api-service
                 port:
-                  number: 80
+                  number: 90
   tls:
     - hosts:
-        - api.golang-banking.xyz
-      secretName: golang-banking-api-cert
+        - gapi.golang-banking.xyz
+      secretName: golang-banking-gapi-cert
