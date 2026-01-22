@@ -23,3 +23,6 @@ spec:
               name: http-server
             - containerPort: 9090
               name: grpc-server
+          envFrom:
+            - secretRef:  
+                name: go-banking-secrets
