@@ -47,6 +47,10 @@ jobs:
       - name: Update kube config
         run: aws eks update-kubeconfig --name go-banking-cluster --region eu-central-1
 
+      - name: Create Kubernetes Secret
+        run: |
+          kubectl create secret generic go-banking-secrets --from-env-file=app.env --dry-run=client -o yaml | kubectl apply -f -
+
       - name: Deploy image to Amazon EKS
         run: |
           kubectl apply -f eks/aws-auth.yaml
