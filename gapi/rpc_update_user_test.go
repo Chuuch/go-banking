@@ -67,7 +67,7 @@ func TestUpdateUserAPI(t *testing.T) {
 
 			},
 			buildContext: func(t *testing.T, tokenMaker token.Maker) context.Context {
-				accessToken, _, err := tokenMaker.CreateToken(user.Username, time.Minute)
+				accessToken, _, err := tokenMaker.CreateToken(user.Username, user.Role, time.Minute)
 				require.NoError(t, err)
 				bearerToken := fmt.Sprintf("%s %s", authorizationBearer, accessToken)
 				md := metadata.MD{
@@ -101,7 +101,7 @@ func TestUpdateUserAPI(t *testing.T) {
 
 			},
 			buildContext: func(t *testing.T, tokenMaker token.Maker) context.Context {
-				return newContextWithBearerToken(t, tokenMaker, user.Username, time.Minute)
+				return newContextWithBearerToken(t, tokenMaker, user.Username, user.Role, time.Minute)
 			},
 			checkResponse: func(t *testing.T, res *pb.UpdateUserResponse, err error) {
 				require.Error(t, err)
@@ -123,7 +123,7 @@ func TestUpdateUserAPI(t *testing.T) {
 					Times(0)
 			},
 			buildContext: func(t *testing.T, tokenMaker token.Maker) context.Context {
-				return newContextWithBearerToken(t, tokenMaker, user.Username, -time.Minute)
+				return newContextWithBearerToken(t, tokenMaker, user.Username, user.Role, -time.Minute)
 			},
 			checkResponse: func(t *testing.T, res *pb.UpdateUserResponse, err error) {
 				require.Error(t, err)

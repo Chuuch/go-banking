@@ -3,6 +3,7 @@ package gapi
 import (
 	"context"
 	"fmt"
+	"slices"
 	"strings"
 
 	"github.com/chuuch/go-banking/token"
@@ -16,7 +17,7 @@ const (
 	authorizationBearer = "bearer"
 )
 
-func (server *Server) authorizeUser(ctx context.Context) (*token.Payload, error) {
+func (server *Server) authorizeUser(ctx context.Context, accessibleRoles []string) (*token.Payload, error) {
 	md, ok := metadata.FromIncomingContext(ctx)
 
 	if !ok {
@@ -40,5 +41,13 @@ func (server *Server) authorizeUser(ctx context.Context) (*token.Payload, error)
 	if err != nil {
 		return nil, status.Errorf(codes.Unauthenticated, "invalid access token: %s", err)
 	}
+
+	if !hasPermission(payload.Role, accessibleRoles) {
+		return nil, fmt.Errorf("permission denied")
+	}
 	return payload, nil
+}
+
+func hasPermission(userRole string, accessibleRoles []string) bool {
+	return slices.Contains(accessibleRoles, userRole)
 }
