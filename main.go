@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"net"
 	"net/http"
 	"os"
@@ -134,7 +135,11 @@ func runGRPCServer(ctx context.Context, waitGroup *errgroup.Group, config util.C
 		log.Info().Msgf("start gRPC server at %s", listener.Addr().String())
 		err = grpcServer.Serve(listener)
 		if err != nil {
-			log.Error().Err(err).Msg("cannot start gRPC server:")
+			// If the server is stopped, we return nil to avoid logging an error during shutdown
+			if errors.Is(err, grpc.ErrServerStopped) {
+				return nil
+			}
+			log.Error().Err(err).Msg("gRPC server failed to serve:")
 			return err
 		}
 		return nil
@@ -194,6 +199,10 @@ func runGatewayServer(ctx context.Context, waitGroup *errgroup.Group, config uti
 		log.Info().Msgf("start HTTP gateway server at %s", httpServer.Addr)
 		err = httpServer.ListenAndServe()
 		if err != nil {
+			// If the server is stopped, we return nil to avoid logging an error during shutdown
+			if errors.Is(err, http.ErrServerClosed) {
+				return nil
+			}
 			log.Error().Err(err).Msg("HTTP gateway server failed to serve:")
 			return err
 		}
