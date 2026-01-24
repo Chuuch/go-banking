@@ -9,6 +9,7 @@ spec:
     privateKeySecretRef:
       name: letsencrypt-account-private-key
     solvers:
-      - http01:
-          ingress:
-            ingressClassName: nginx
+    - dns01:
+        route53:
+          region: eu-central-1
+          hostedZoneID: Z04677662LQDVENYJPMKD # Must match the ID in your Policy
