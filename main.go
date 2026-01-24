@@ -240,15 +240,3 @@ func runGatewayServer(ctx context.Context, waitGroup *errgroup.Group, config uti
 	})
 
 }
-
-// func runHTTPServer(config util.Config, store db.Store) {
-// 	server, err := api.NewServer(config, store)
-// 	if err != nil {
-// 		log.Fatal().Msg("cannot create server:")
-// 	}
-
-// 	err = server.Start(config.HTTPServerAddress)
-// 	if err != nil {
-// 		log.Fatal().Msg("cannot start server:")
-// 	}
-// }
